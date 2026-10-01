@@ -1,10 +1,10 @@
-🕵️‍♂️ SQL Escape Room - Invasão OmniSec
+# 🕵️‍♂️ SQL Escape Room - Invasão OmniSec
 
 Um jogo educativo estilo "Escape Room" desenvolvido para turmas de Banco de Dados. Os alunos assumem o papel de hackers tentando invadir o mainframe da megacorporação OmniSec. Para avançar pelas 15 salas de segurança, as equipes devem resolver desafios práticos de MySQL.
 
 Este projeto foi idealizado para metodologias ativas de ensino (especialmente no Senac), promovendo colaboração, raciocínio lógico e fixação da sintaxe SQL.
 
-✨ Funcionalidades
+### ✨ Funcionalidades
 
 15 Níveis Progressivos: Cobre desde comandos básicos (SELECT, WHERE) até DML (INSERT, UPDATE, DELETE), DDL (ALTER, DROP), Joins, Subqueries e Funções de Agregação.
 
@@ -16,7 +16,7 @@ Interface Imersiva: Design inspirado em terminais hackers (Cyberpunk/CRT), com b
 
 Ranking Automático (Backend Google): Integração com Google Apps Script para registrar o tempo de conclusão das equipes em uma planilha do Google Sheets e enviar um e-mail ao professor.
 
-🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 Front-end: HTML5, CSS3, JavaScript (Vanilla)
 
@@ -24,9 +24,9 @@ Back-end (Serverless): Google Apps Script (Integração com Google Sheets e Gmai
 
 Hospedagem Recomendada: GitHub Pages ou Azure Static Web Apps
 
-🚀 Como Executar e Hospedar o Projeto
+## 🚀 Como Executar e Hospedar o Projeto
 
-1. Configurando o Front-end
+### 1. Configurando o Front-end
 
 Faça o clone deste repositório ou baixe os arquivos (index.html, style.css, script.js).
 
@@ -34,7 +34,7 @@ Abra o arquivo index.html no seu navegador para testar localmente.
 
 Para jogar em sala de aula, hospede os arquivos em uma plataforma estática gratuita (como o GitHub Pages).
 
-2. Configurando o Back-end (Ranking e E-mail)
+### 2. Configurando o Back-end (Ranking e E-mail)
 
 Para receber os tempos das equipes e salvar no Google Sheets, siga este passo a passo:
 
@@ -51,7 +51,7 @@ No arquivo script.js do seu projeto, substitua a variável GOOGLE_APPS_SCRIPT_UR
 const GOOGLE_APPS_SCRIPT_URL = "SUA_URL_AQUI";
 
 
-🎮 Regras do Jogo para os Alunos
+## 🎮 Regras do Jogo para os Alunos
 
 Formem equipes de 3 a 4 pessoas.
 
@@ -65,6 +65,6 @@ Cuidado: 3 tentativas incorretas ativam o bloqueio temporário de segurança de 
 
 A primeira equipe a chegar à tela de "Sistema Comprometido" e registrar o tempo na planilha do professor vence.
 
-👨‍🏫 Autor
+## 👨‍🏫 Autor
 
 Criado por Jociel para aplicação em aulas de Banco de Dados. Fique à vontade para fazer um fork, alterar os desafios no array de níveis (script.js) e adaptar para as suas turmas!
