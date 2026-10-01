@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Escape Room - Invasão MySQL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="container">
+        
+        <!-- Tela de Login -->
+        <section id="login-screen" class="screen active">
+            <h1>>_ TERMINAL DE ACESSO MYSQL</h1>
+            <p>A corporação OmniSec protege seus dados com MySQL 8.0. Precisamos de uma equipe para invadir o mainframe.</p>
+            <input type="text" id="team-name" placeholder="Digite o Nome da Equipe" autocomplete="off">
+            <button onclick="startGame()">Iniciar Invasão</button>
+        </section>
+
+        <!-- Container Dinâmico da Sala -->
+        <section id="game-screen" class="screen">
+            <h2 id="level-title"></h2>
+            <p class="story" id="level-story"></p>
+            
+            <div class="schema" id="level-schema">
+                <!-- Injetado via JS -->
+            </div>
+            
+            <p id="level-question"></p>
+            
+            <!-- Area de Input (Muda entre Input text e Textarea dependendo do nível) -->
+            <div id="input-area"></div>
+            
+            <button onclick="checkAnswer()">Executar Comando</button>
+            <p class="error-msg" id="error-msg"></p>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progress-fill"></div>
+            </div>
+        </section>
+
+        <!-- Tela de Bloqueio -->
+        <section id="timeout-screen" class="screen">
+            <h2 class="danger">FIREWALL ATIVADO</h2>
+            <p>Múltiplas anomalias detectadas. O MySQL bloqueou seu IP.</p>
+            <p>Aguarde o reset da tabela de roteamento...</p>
+            <h1 id="timer">60</h1>
+        </section>
+
+        <!-- Tela de Sucesso -->
+        <section id="success-screen" class="screen">
+            <h2 class="success">MAINFRAME DERRUBADO</h2>
+            <p>Vocês apagaram os rastros e extraíram os dados. Missão cumprida.</p>
+            <p>Equipe invasora: <span id="display-team-name"></span></p>
+            <p>Habilidade em Banco de Dados: NÍVEL DBA (Database Administrator).</p>
+        </section>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
