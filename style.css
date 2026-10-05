@@ -5,6 +5,7 @@
     --text-color: #00ff00;
     --danger-color: #ff003c;
     --border-color: #004400;
+    font-size: 1.2rem;
 }
 
 body, html {
@@ -27,30 +28,44 @@ body, html {
     width: 90%; max-width: 850px; background: #0a0a0a;
     border: 2px solid var(--text-color); box-shadow: 0 0 15px var(--text-color);
     padding: 30px; border-radius: 5px; z-index: 10;
+    position: relative;
 }
 
 .screen { display: none; }
 .screen.active { display: block; animation: fadeIn 0.4s ease-in; }
 
-h1, h2 { font-family: 'VT323', monospace; text-transform: uppercase; }
+h1, h2 { font-family: 'VT323', monospace; text-transform: uppercase; font-size: 3em; margin-top: 0;}
 .danger { color: var(--danger-color); }
 .success { color: #00ffff; }
 
+/* Animação para dar dinamismo */
+.blink { animation: blinker 1s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
+
 .schema {
     background: #111; border: 1px dashed var(--text-color);
-    padding: 15px; margin: 15px 0; font-size: 0.95em;
-    white-space: pre-line; /* Mantém as quebras de linha do JS */
+    padding: 15px; margin: 15px 0; font-size: 1em;
+    white-space: pre-line;
+    border-left: 4px solid var(--text-color);
+}
+
+/* Estilo do Input simulando Terminal */
+.prompt-line {
+    display: flex; align-items: flex-start; margin-bottom: 20px; width: 100%;
+}
+
+.prompt-prefix {
+    color: #00ffff; font-weight: bold; margin-right: 10px; margin-top: 10px;
 }
 
 input[type="text"], textarea {
-    width: 100%; background: #001100; border: 1px solid var(--text-color);
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--text-color);
     color: var(--text-color); font-family: 'Share Tech Mono', monospace;
-    font-size: 1.1em; padding: 10px; margin-bottom: 20px; outline: none;
-    box-sizing: border-box;
+    font-size: 1.2em; padding: 10px 5px; outline: none; box-sizing: border-box;
 }
 
-textarea { height: 100px; resize: vertical; }
-input:focus, textarea:focus { box-shadow: 0 0 8px var(--text-color); }
+textarea { height: 60px; resize: vertical; border: 1px solid var(--text-color); background: #001100; padding: 10px;}
+input:focus, textarea:focus { background: #002200; }
 
 button {
     background: var(--text-color); color: var(--bg-color); border: none;
@@ -58,13 +73,67 @@ button {
     font-size: 1.1em; cursor: pointer; font-weight: bold; text-transform: uppercase;
 }
 button:hover { background: #fff; box-shadow: 0 0 10px var(--text-color); }
+button:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
 
-.error-msg { color: var(--danger-color); margin-top: 10px; min-height: 20px; }
+.error-msg { color: var(--danger-color); margin-top: 10px; min-height: 20px; font-weight: bold;}
 
 .progress-bar {
-    width: 100%; height: 10px; border: 1px solid var(--text-color);
+    width: 100%; height: 5px; border: 1px solid #333;
     margin-top: 20px; background: #111;
 }
-.progress { height: 100%; background: var(--text-color); width: 0%; transition: 0.5s; }
+.progress { height: 100%; background: var(--text-color); width: 0%; transition: width 0.5s ease-in-out; }
+
+.terminal-center { text-align: center; padding: 40px 0; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* ---- NOVAS IMPLEMENTAÇÕES (GAMIFICAÇÃO) ---- */
+
+/* Controles de Áudio */
+.audio-controls {
+    position: absolute; top: 15px; right: 15px; z-index: 1000;
+    display: flex; gap: 10px;
+}
+
+.global-btn {
+    background: rgba(0, 20, 0, 0.8); border: 1px solid var(--text-color);
+    color: var(--text-color); padding: 5px 10px; font-size: 0.8em;
+    font-family: 'Share Tech Mono', monospace; cursor: pointer; transition: 0.3s;
+}
+
+.global-btn:hover {
+    background: var(--text-color); color: var(--bg-color);
+}
+
+/* Modo Boss (Altera o visual da tela toda) */
+body.boss-mode {
+    --text-color: #ff3333; /* Fica tudo vermelho */
+    --bg-color: #1a0000;
+    box-shadow: inset 0 0 50px rgba(255, 0, 0, 0.3);
+}
+
+body.boss-mode .container {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 25px var(--danger-color);
+}
+
+body.boss-mode .progress { background: var(--danger-color); }
+
+/* Sistema de Dicas */
+.hint-btn {
+    background: transparent; border: 1px dashed #ffff00;
+    color: #ffff00; font-size: 0.8em; padding: 5px 10px;
+    margin-bottom: 10px; cursor: pointer; display: block;
+}
+.hint-btn:hover { background: #ffff00; color: #000; }
+.hint-display {
+    color: #ffff00; border-left: 3px solid #ffff00;
+    padding-left: 10px; margin-bottom: 15px; font-size: 1em;
+}
+
+#boss-timer-container {
+    border: 2px solid var(--danger-color); padding: 10px;
+    text-align: center; margin-bottom: 20px; background: #220000;
+}
+

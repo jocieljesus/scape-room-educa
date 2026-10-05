@@ -8,31 +8,59 @@
 </head>
 <body>
     <div class="crt-overlay"></div>
+    
+    <!-- Áudios do Jogo -->
+    <audio id="bgm" loop src="audios/musica-fundo-2.mp3"></audio> <!-- Synthwave BGM -->
+    <audio id="sfx-type" loop src="audios/teclado-mecanico.mp3"></audio> <!--Teclado mecanico-->
+    <audio id="sfx-success" src="audios/sucesso.mp3"></audio> <!-- Acesso Concedido -->
+    <audio id="sfx-error" src="audios/error.mp3"></audio> <!-- Erro/Buzzer -->
+
+    <!-- Controles Globais de Áudio -->
+    <div class="audio-controls">
+        <button id="btn-bgm" onclick="toggleBgm()" class="global-btn">🎵 MÚSICA: LIGADA</button>
+        <button id="btn-sfx" onclick="toggleSfx()" class="global-btn">🔊 EFEITOS: LIGADOS</button>
+    </div>
+
     <div class="container">
         
         <!-- Tela de Login -->
         <section id="login-screen" class="screen active">
-            <h1>>_ TERMINAL DE ACESSO MYSQL</h1>
-            <p>A corporação OmniSec protege seus dados com MySQL 8.0. Precisamos de uma equipe para invadir o mainframe.</p>
-            <input type="text" id="team-name" placeholder="Digite o Nome da Equipe" autocomplete="off">
+            <h1>>_ BEM VINDO AO TERMINAL DE ACESSO MYSQL</h1>
+            <p>A corporação OmniSec protege seus dados. Precisamos de uma equipe para invadir o mainframe.</p>
+            <div class="prompt-line">
+                <span class="prompt-prefix">user@local:~$</span>
+                <input type="text" id="team-name" placeholder="Digite o Nome da Equipe" autocomplete="off">
+            </div>
             <button onclick="startGame()">Iniciar Invasão</button>
+
+            <p>Precisa de um SELECT * FROM Dicas? O Prof. Jociel pode ser acionado a qualquer momento, mas essa query tem um alto custo de processamento. Você está disposto a pagar o preço?</p>
         </section>
 
         <!-- Container Dinâmico da Sala -->
         <section id="game-screen" class="screen">
-            <h2 id="level-title"></h2>
-            <p class="story" id="level-story"></p>
             
-            <div class="schema" id="level-schema">
-                <!-- Injetado via JS -->
+            <!-- Cronômetro do Boss (Escondido por padrão) -->
+            <div id="boss-timer-container" style="display: none;">
+                <h3 class="danger blink">ALERTA DE RASTREAMENTO: <span id="boss-time">03:00</span></h3>
             </div>
+
+            <h2 id="level-title"></h2>
+            
+            <p class="story" id="level-story"></p>
+            <div class="schema" id="level-schema"></div>
             
             <p id="level-question"></p>
+
+            <!-- Sistema de Dicas (Risco/Recompensa) -->
+            <button id="btn-hint" class="hint-btn" onclick="hackearDica()">[!] HACKEAR DICA (+1 MIN DE PENALIDADE)</button>
+            <p id="hint-text" class="hint-display" style="display: none;"></p>
             
-            <!-- Area de Input (Muda entre Input text e Textarea dependendo do nível) -->
-            <div id="input-area"></div>
+            <div class="prompt-line">
+                <span class="prompt-prefix">root@omnisec:~#</span>
+                <div id="input-area" style="width: 100%;"></div>
+            </div>
             
-            <button onclick="checkAnswer()">Executar Comando</button>
+            <button id="btn-execute" onclick="checkAnswer()">Executar Comando</button>
             <p class="error-msg" id="error-msg"></p>
             
             <div class="progress-bar">
@@ -40,20 +68,36 @@
             </div>
         </section>
 
+        <!-- Tela de Falha no Boss -->
+        <section id="boss-fail-screen" class="screen">
+            <h2 class="danger blink">RASTREAMENTO CONCLUÍDO</h2>
+            <p class="story">A OmniGuard detectou sua posição física.</p>
+            <p class="story">Para despistá-los, fomos forçados a recuar um nível de segurança.</p>
+            <p class="danger">REINICIANDO CONEXÃO...</p>
+        </section>
+
+        <!-- Tela de Transição -->
+        <section id="transition-screen" class="screen">
+            <div class="terminal-center">
+                <h2 class="success blink">>_ ACESSO CONCEDIDO</h2>
+                <p class="story">Validando query...</p>
+                <p class="story blink">Descriptografando próximo nível <span class="loading-dots">...</span></p>
+            </div>
+        </section>
+
         <!-- Tela de Bloqueio -->
         <section id="timeout-screen" class="screen">
-            <h2 class="danger">FIREWALL ATIVADO</h2>
+            <h2 class="danger blink">FIREWALL ATIVADO</h2>
             <p>Múltiplas anomalias detectadas. O MySQL bloqueou seu IP.</p>
-            <p>Aguarde o reset da tabela de roteamento...</p>
-            <h1 id="timer">60</h1>
+            <h1 id="timer" class="danger">30</h1>
         </section>
 
         <!-- Tela de Sucesso -->
         <section id="success-screen" class="screen">
-            <h2 class="success">MAINFRAME DERRUBADO</h2>
-            <p>Vocês apagaram os rastros e extraíram os dados. Missão cumprida.</p>
-            <p>Equipe invasora: <span id="display-team-name"></span></p>
-            <p>Habilidade em Banco de Dados: NÍVEL DBA (Database Administrator).</p>
+            <h2 class="success blink">MAINFRAME DERRUBADO</h2>
+            <p>Missão cumprida.</p>
+            <p>Equipe invasora: <strong id="display-team-name" class="success"></strong></p>
+            <p id="display-penalty" style="color: yellow;"></p>
         </section>
 
     </div>
