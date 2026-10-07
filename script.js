@@ -769,7 +769,9 @@ function sendEmailReport(teamName, timeString) {
         body: JSON.stringify({
             Assunto: "🚨 Escape Room SQL - Resultado!",
             Aluno: teamName,
-            Tempo_Gasto: timeString
+            Tempo_Gasto: timeString,
+            Penalidade: penaltyTime > 0 ? `${Math.floor(penaltyTime/60)} minutos` : "Nenhuma",
+            Nível_Final: currentLevelIndex >= levels.length ? "50 (FINAL BOSS)" : currentLevelIndex
         })
     })
     .then(response => {
