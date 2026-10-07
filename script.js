@@ -314,6 +314,13 @@ function loadLevel() {
         ? `<textarea id="user-answer" placeholder="${levelData.placeholder}"></textarea>` 
         : `<input type="text" id="user-answer" placeholder="${levelData.placeholder}" autocomplete="off">`;
 
+    document.getElementById('user-answer').addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            checkAnswer();
+        }
+    });
+
     setTimeout(() => { document.getElementById('user-answer').focus(); }, 100);
     document.getElementById('progress-fill').style.width = `${(currentLevelIndex / levels.length) * 100}%`;
 
