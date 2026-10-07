@@ -67,4 +67,4 @@ A primeira equipe a chegar à tela de "Sistema Comprometido" e registrar o tempo
 
 ## 👨‍🏫 Autor
 
-Criado por Jociel para aplicação em aulas de Banco de Dados. Fique à vontade para fazer um fork, alterar os desafios no array de níveis (script.js) e adaptar para as suas turmas!
+Criado por Jociel para aplicação em aulas de Banco de Dados utilizando o auxilio do Gemini. Fique à vontade para fazer um fork, alterar os desafios no array de níveis (script.js) e adaptar para as suas turmas!
