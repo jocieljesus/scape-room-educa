@@ -2,88 +2,7 @@
 // OS 20 NÍVEIS (MODO FÁCIL - REVISÃO BÁSICA)
 // ==========================================
 const levels = [
-    // --- NÍVEL 1 ---
-    {
-        title: "NÍVEL 1: O Início",
-        story: "Conseguimos acessar o primeiro terminal da OmniSec. Qual é a senha do administrador?",
-        schema: "Tabela: admin_dados\nColunas: id (INT), nome (VARCHAR), senha (VARCHAR)\nRegistro 1: id=1, nome='sysadmin', senha='omega_protocol'",
-        question: "Sabendo que a senha está no registro acima, qual seria a saída exata se você executasse: SELECT senha FROM admin_dados WHERE id=1?",
-        type: "output", answer: "omega_protocol",
-        placeholder: "Digite o valor encontrado",
-        hint: "A query pede apenas o texto que está salvo dentro da coluna 'senha'."
-    },
-    // --- NÍVEL 2 ---
-    {
-        title: "NÍVEL 2: Varredura de Setor",
-        story: "A primeira porta digital está trancada. Precisamos listar todos os dados da tabela de servidores.",
-        schema: "Tabela: servidores\nColunas: id, nome, status, ip",
-        question: "Escreva a query para selecionar TODAS (*) as colunas da tabela 'servidores'. (Não precisa de WHERE).",
-        type: "query", answer: "select * from servidores",
-        placeholder: "SELECT ...",
-        hint: "O comando mais básico do SQL: SELECT * FROM nome_da_tabela."
-    },
-    // --- NÍVEL 3 ---
-    {
-        title: "NÍVEL 3: Foco no Alvo",
-        story: "Trazer todos os dados gasta muita banda. Precisamos apenas dos IPs dos servidores.",
-        schema: "Tabela: servidores\nColunas: id, nome, status, ip",
-        question: "Escreva a query para selecionar APENAS a coluna 'ip' da tabela 'servidores'.",
-        type: "query", answer: "select ip from servidores",
-        placeholder: "SELECT ...",
-        hint: "Em vez do asterisco (*), coloque o nome da coluna que você quer."
-    },
-    // --- NÍVEL 4 ---
-    {
-        title: "NÍVEL 4: O Primeiro Filtro",
-        story: "Vamos focar apenas nos servidores que estão ativos.",
-        schema: "Tabela: servidores\nColunas: id, nome, status, ip",
-        question: "Selecione TODAS (*) as colunas da tabela 'servidores' onde o 'status' seja igual a 'ativo'.",
-        type: "query", answer: "select * from servidores where status = 'ativo'",
-        placeholder: "SELECT ...",
-        hint: "Use WHERE para filtrar. Lembre-se que palavras (textos) precisam estar entre aspas simples ('ativo')."
-    },
-    // --- NÍVEL 5 [BOSS 1] ---
-    {
-        title: "NÍVEL 5: Sabotagem [BOSS BATTLE]",
-        story: "A OmniGuard detectou anomalias! Desligue rapidamente o sistema de rastreamento antes que o tempo acabe!",
-        schema: "Tabela: rastreamento\nColunas: id, status",
-        question: "Escreva a query para ATUALIZAR (UPDATE) a tabela 'rastreamento', definindo o 'status' como 'desligado'. (Atenção: atualize todos de uma vez, sem usar WHERE).",
-        type: "query", answer: "update rastreamento set status = 'desligado'",
-        placeholder: "UPDATE ...",
-        hint: "Sintaxe: UPDATE tabela SET coluna = 'novo_valor'.",
-        isBoss: true
-    },
-    // --- NÍVEL 6 ---
-    {
-        title: "NÍVEL 6: Limpando Rastros",
-        story: "O firewall registrou o ID da nossa conexão. Precisamos apagá-lo rápido.",
-        schema: "Tabela: firewall\nColunas: id, ip_origem",
-        question: "Escreva a query para DELETAR os registros da tabela 'firewall' onde o 'id' seja igual a 99.",
-        type: "query", answer: "delete from firewall where id = 99",
-        placeholder: "DELETE FROM ...",
-        hint: "A sintaxe é DELETE FROM tabela WHERE condicao. Para números, não precisa de aspas."
-    },
-    // --- NÍVEL 7 ---
-    {
-        title: "NÍVEL 7: Contagem Básica",
-        story: "Precisamos saber quantos arquivos existem no cofre.",
-        schema: "Tabela: cofre_arquivos\nColunas: id_arquivo, nome, tamanho",
-        question: "Escreva a query usando a função de agregação que CONTA o número total de registros (COUNT(*)) da tabela 'cofre_arquivos'.",
-        type: "query", answer: "select count(*) from cofre_arquivos",
-        placeholder: "SELECT ...",
-        hint: "Em vez de selecionar colunas, selecione COUNT(*) FROM tabela."
-    },
-    // --- NÍVEL 8 ---
-    {
-        title: "NÍVEL 8: Matemática Lógica",
-        story: "Você acabou de apagar dois arquivos. O sistema está verificando os dados.",
-        schema: "A tabela possuía 10 arquivos. Você rodou um DELETE e apagou 2.",
-        question: "Se o sistema rodar a query SELECT COUNT(*) FROM cofre_arquivos agora, qual será o número retornado?",
-        type: "output", answer: "8",
-        placeholder: "Digite apenas o número",
-        hint: "Se você tinha 10 e apagou 2, quantos sobraram no total da contagem?"
-    },
-    // --- NÍVEL 9 ---
+
     {
         title: "NÍVEL 9: Ordenando a Bagunça",
         story: "Os registros estão misturados. Queremos ver a lista de funcionários em ordem alfabética.",
@@ -383,7 +302,11 @@ function failBoss() {
 }
 
 function normalizeSQL(sqlString) {
-    return sqlString.toLowerCase().replace(/\s+/g, ' ').replace(/"/g, "'").replace(/;\s*$/, '').trim();
+    const tokens = sqlString.toLowerCase().match(/'(?:''|[^'])*'|"(?:""|[^"])*"|[a-z0-9_]+|<=|>=|<>|!=|[^\s]/g) || [];
+    return tokens
+        .map(token => token.startsWith('"') ? `'${token.slice(1, -1)}'` : token)
+        .filter(token => token !== ';')
+        .join(' ');
 }
 
 function checkAnswer() {
