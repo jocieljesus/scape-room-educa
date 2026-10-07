@@ -768,7 +768,7 @@ function sendEmailReport(teamName, timeString) {
         },
         body: JSON.stringify({
             Assunto: "🚨 Escape Room SQL - Resultado!",
-            Equipe: teamName,
+            Aluno: teamName,
             Tempo_Gasto: timeString
         })
     })
