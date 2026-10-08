@@ -608,7 +608,7 @@ function loadLevel() {
 
 // --- SISTEMA DE DICAS (PENALIDADE) ---
 function hackearDica() {
-    const confirmacao = confirm("ATENÇÃO: Hackear esta dica adicionará +1 MINUTO de penalidade ao tempo final da equipe. Deseja assumir o risco?");
+    const confirmacao = confirm("ATENÇÃO: Hackear esta dica adicionará +30 SEGUNDOS de penalidade ao tempo final da equipe. Deseja assumir o risco?");
     if (confirmacao) {
         penaltyTime += 60; // Adiciona 1 minuto em segundos
         document.getElementById('hint-text').innerText = ">_ DICA OMNISEC: " + levels[currentLevelIndex].hint;
