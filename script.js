@@ -1,469 +1,469 @@
 // ==========================================
-// A MEGA CAMPANHA OMNISEC - 50 NÍVEIS
+// A MEGA CAMPANHA OMNISEC - 50 NÍVEIS (FOCO EM AÇÃO DML/DDL)
 // ==========================================
 const levels = [
-    // ==========================================
-    // FASE 1: INFILTRAÇÃO BÁSICA (FÁCIL)
-    // ==========================================
+    // --- FASE 1: ACESSO AO TERMINAL E HACK RÁPIDO (1 a 10) ---
     {
-        title: "NÍVEL 1: Disfarce de Nomes (ALIAS)",
-        story: "Conseguimos entrar, mas os dados estão visíveis. Vamos mascarar a coluna de nomes para 'agente' para confundir a segurança.",
-        schema: "Tabela: operativos\nColunas: nome, setor",
-        question: "Selecione a coluna 'nome' da tabela 'operativos', mas renomeie-a temporariamente (usando AS) para 'agente'.",
-        type: "query", answer: "select nome as agente from operativos",
-        placeholder: "SELECT ...",
-        hint: "Use a palavra AS logo após o nome da coluna para dar um apelido a ela."
+        title: "NÍVEL 1: O Alvo",
+        story: "Conseguimos abrir o terminal. O servidor possui vários bancos de dados. Precisamos nos conectar ao banco principal.",
+        schema: "Bancos disponíveis: sys, mysql, omnisec, temp",
+        question: "Qual o comando (com apenas duas palavras) para selecionar/usar o banco de dados 'omnisec'?",
+        type: "query", answer: "use omnisec",
+        placeholder: "Comando...",
+        hint: "Comando básico do MySQL: USE nome_do_banco."
     },
     {
-        title: "NÍVEL 2: Evitando Duplicações",
-        story: "O log de conexões está poluído. Queremos ver quais setores se conectaram, mas sem repetir nomes na lista.",
-        schema: "Tabela: conexoes\nColunas: id, setor",
-        question: "Escreva a query para selecionar apenas os valores ÚNICOS (sem repetição) da coluna 'setor' da tabela 'conexoes'.",
-        type: "query", answer: "select distinct setor from conexoes",
-        placeholder: "SELECT ...",
-        hint: "A cláusula DISTINCT, colocada logo após o SELECT, remove valores duplicados do resultado."
+        title: "NÍVEL 2: Mapeamento Visual",
+        story: "Estamos dentro. Agora precisamos ver os nomes de todas as tabelas que existem aqui para saber o que atacar.",
+        schema: "Banco de dados atual: omnisec",
+        question: "Qual comando do MySQL mostra a lista de todas as tabelas?",
+        type: "query", answer: "show tables",
+        placeholder: "Comando...",
+        hint: "Comando de duas palavras: SHOW TABLES."
     },
     {
-        title: "NÍVEL 3: Múltiplas Portas (OR)",
-        story: "A porta blindada abre se o cargo for da chefia ou se for do esquadrão tático.",
-        schema: "Tabela: pessoal\nColunas: nome, cargo",
-        question: "Selecione o 'nome' da tabela 'pessoal' onde o 'cargo' seja igual a 'chefe' OU (OR) o 'cargo' seja 'tatico'.",
-        type: "query", answer: "select nome from pessoal where cargo = 'chefe' or cargo = 'tatico'",
-        placeholder: "SELECT ...",
-        hint: "Use a palavra OR no WHERE para que a query aceite a primeira OU a segunda condição."
+        title: "NÍVEL 3: Visão de Raio-X",
+        story: "Encontramos a tabela 'firewall', mas precisamos saber os tipos de dados das colunas dela antes de tentar algo.",
+        schema: "Tabela alvo: firewall",
+        question: "Qual comando (usando a abreviação de 4 letras) descreve a estrutura da tabela 'firewall'?",
+        type: "query", answer: "desc firewall",
+        placeholder: "Comando...",
+        hint: "Use a abreviação do comando describe: DESC nome_da_tabela."
     },
     {
-        title: "NÍVEL 4: A Lista VIP (IN)",
-        story: "Existem 3 IDs com passe livre no servidor: 1, 5 e 9. Precisamos interceptar o tráfego deles.",
-        schema: "Tabela: trafego\nColunas: ip, id_usuario",
-        question: "Selecione o 'ip' da tabela 'trafego' onde o 'id_usuario' esteja DENTRO DA LISTA (IN) 1, 5 e 9.",
-        type: "query", answer: "select ip from trafego where id_usuario in (1, 5, 9)",
-        placeholder: "SELECT ...",
-        hint: "Em vez de usar vários OR, use: WHERE coluna IN (valor1, valor2, valor3)."
-    },
-    {
-        title: "NÍVEL 5: Intervalo Fechado (BETWEEN)",
-        story: "Uma transferência suspeita ocorreu de madrugada. Precisamos buscar as transações ocorridas em um intervalo específico.",
-        schema: "Tabela: financas\nColunas: valor, hora",
-        question: "Selecione o 'valor' da tabela 'financas' onde a 'hora' esteja ENTRE (BETWEEN) 2 e 4.",
-        type: "query", answer: "select valor from financas where hora between 2 and 4",
-        placeholder: "SELECT ...",
-        hint: "Sintaxe: WHERE coluna BETWEEN valor1 AND valor2."
-    },
-    {
-        title: "NÍVEL 6: Minúsculas (LOWER)",
-        story: "O sistema de validação da OmniSec é sensível a maiúsculas (Case Sensitive). Precisamos converter a chave interceptada.",
-        schema: "Tabela: senhas_brutas\nColunas: chave_original (Texto: 'OmNiSec_RoOt')",
-        question: "Use a função LOWER() para selecionar a coluna 'chave_original' convertida inteiramente para letras minúsculas da tabela 'senhas_brutas'.",
-        type: "query", answer: "select lower(chave_original) from senhas_brutas",
-        placeholder: "SELECT ...",
-        hint: "Basta envolver o nome da coluna na função: LOWER(nome_da_coluna)."
-    },
-    {
-        title: "NÍVEL 7: Maiúsculas (UPPER)",
-        story: "O painel de LED do cofre só aceita caracteres em caixa alta.",
-        schema: "Tabela: painel\nColunas: mensagem",
-        question: "Use a função UPPER() para selecionar a coluna 'mensagem' totalmente em maiúsculas da tabela 'painel'.",
-        type: "query", answer: "select upper(mensagem) from painel",
-        placeholder: "SELECT ...",
-        hint: "Assim como o LOWER, envolva a coluna na função: UPPER(nome_da_coluna)."
-    },
-    {
-        title: "NÍVEL 8: Tamanho da Criptografia (LENGTH)",
-        story: "Precisamos descobrir quantos caracteres tem a chave mestre para preparar o ataque de força bruta.",
-        schema: "Tabela: cofre\nColunas: hash_mestre",
-        question: "Use a função LENGTH() para descobrir o tamanho (quantidade de caracteres) da coluna 'hash_mestre' na tabela 'cofre'.",
-        type: "query", answer: "select length(hash_mestre) from cofre",
-        placeholder: "SELECT ...",
-        hint: "Sintaxe: SELECT LENGTH(nome_da_coluna) FROM tabela."
-    },
-    {
-        title: "NÍVEL 9: Os Excluídos (NOT IN)",
-        story: "Precisamos de uma lista de todos os setores para atacar, exceto 'limpeza' e 'copa'.",
-        schema: "Tabela: mapa\nColunas: setor, andar",
-        question: "Selecione a coluna 'setor' da tabela 'mapa' onde o 'setor' NÃO ESTEJA NA LISTA (NOT IN) 'limpeza' e 'copa'.",
-        type: "query", answer: "select setor from mapa where setor not in ('limpeza', 'copa')",
-        placeholder: "SELECT ...",
-        hint: "Funciona igual ao IN, mas inverte a lógica: WHERE coluna NOT IN ('valor1', 'valor2')."
-    },
-    {
-        title: "NÍVEL 10: Esvaziamento Rápido [BOSS BATTLE]",
-        story: "ALERTA! A segurança está extraindo os logs um a um (DELETE)! Precisamos esvaziar a tabela inteira instantaneamente, resetando até as chaves primárias!",
-        schema: "Tabela: rastreio_log",
-        question: "Qual o comando DDL ultrarrápido para esvaziar completamente (truncar) todos os dados da tabela 'rastreio_log' (sem apagá-la)?",
-        type: "query", answer: "truncate table rastreio_log",
-        placeholder: "TRUNCATE ...",
-        hint: "Não é DROP nem DELETE. Use TRUNCATE TABLE nome_da_tabela.",
-        isBoss: true
-    },
-    {
-        title: "NÍVEL 11: A Regra do Não-Nulo",
-        story: "Existem portas falsas no sistema sem endereço IP. Precisamos ignorá-las.",
-        schema: "Tabela: roteadores\nColunas: nome, ip",
-        question: "Selecione o 'nome' da tabela 'roteadores' onde a coluna 'ip' NÃO SEJA NULA (IS NOT NULL).",
-        type: "query", answer: "select nome from roteadores where ip is not null",
-        placeholder: "SELECT ...",
-        hint: "Para checar se algo tem dados (não é nulo), use: WHERE coluna IS NOT NULL."
-    },
-    {
-        title: "NÍVEL 12: Paginação de Dados (OFFSET)",
-        story: "A lista de suspeitos tem 1000 nomes. Já vimos os 5 primeiros, precisamos pular (offset) eles e pegar apenas os próximos 5.",
-        schema: "Tabela: suspeitos\nColunas: nome",
-        question: "Selecione o 'nome' da tabela 'suspeitos', limitando a 5 linhas (LIMIT 5), mas pulando as 5 primeiras (OFFSET 5).",
-        type: "query", answer: "select nome from suspeitos limit 5 offset 5",
-        placeholder: "SELECT ...",
-        hint: "Coloque LIMIT X OFFSET Y no final da query."
-    },
-    {
-        title: "NÍVEL 13: Matemática Direta",
-        story: "O MySQL não serve apenas para tabelas. Podemos usá-lo como calculadora. Qual a senha gerada pelo algoritmo matemático abaixo?",
-        schema: "Sistema local de processamento.",
-        question: "Se você executar a query direta: SELECT (50 * 2) + 10; qual será o resultado exato na tela?",
-        type: "output", answer: "110",
-        placeholder: "Digite o resultado",
-        hint: "Resolva a matemática básica: multiplique primeiro, some depois."
-    },
-    {
-        title: "NÍVEL 14: Sincronização de Relógio (NOW)",
-        story: "Nosso script de invasão precisa saber a data e a hora exata do servidor da OmniSec para burlar os tokens temporais.",
-        schema: "Função de Data e Hora.",
-        question: "Qual função simples do MySQL você executa no SELECT (sem FROM) para retornar a data e hora atual do sistema?",
-        type: "query", answer: "select now()",
-        placeholder: "SELECT ...",
-        hint: "A função NOW() retorna a data e hora atual."
-    },
-    {
-        title: "NÍVEL 15: O Resto da Divisão (MOD)",
-        story: "A criptografia usa o resto da divisão. O servidor tem ID 10 e será dividido pela chave 3.",
-        schema: "Calculadora SQL.",
-        question: "Se você executar SELECT 10 MOD 3; (ou SELECT 10 % 3;), qual número será retornado?",
-        type: "output", answer: "1",
-        placeholder: "Digite o resultado",
-        hint: "O MOD (ou %) pega o resto de uma divisão. 10 dividido por 3 dá 9. Quanto sobra para chegar a 10?"
-    },
-    // ==========================================
-    // FASE 2: MANIPULAÇÃO AVANÇADA (MÉDIO)
-    // ==========================================
-    {
-        title: "NÍVEL 16: O Custo da Invasão (SUM)",
-        story: "Descobrimos a tabela de orçamento da OmniGuard. Vamos ver quanto dinheiro eles gastaram para tentar nos parar.",
-        schema: "Tabela: defesas\nColunas: nome_defesa, custo_milhoes",
-        question: "Use a função agregadora SUM() para somar a coluna 'custo_milhoes' da tabela 'defesas'.",
-        type: "query", answer: "select sum(custo_milhoes) from defesas",
-        placeholder: "SELECT ...",
-        hint: "Sintaxe: SELECT SUM(coluna) FROM tabela."
-    },
-    {
-        title: "NÍVEL 17: A Média de Idade (AVG)",
-        story: "Precisamos criar perfis falsos convincentes. Qual é a média de idade dos funcionários de lá?",
-        schema: "Tabela: empregados\nColunas: nome, idade",
-        question: "Use a função agregadora AVG() para calcular a média da coluna 'idade' na tabela 'empregados'.",
-        type: "query", answer: "select avg(idade) from empregados",
-        placeholder: "SELECT ...",
-        hint: "AVG vem de Average (Média). Sintaxe igual ao SUM e COUNT."
-    },
-    {
-        title: "NÍVEL 18: O Curinga Exato (LIKE _)",
-        story: "Sabemos que a chave de acesso tem exatamente 4 letras, começa com 'A' e termina com 'Z'.",
-        schema: "Tabela: senhas\nColunas: id, codigo",
-        question: "Selecione o 'codigo' da tabela 'senhas' usando LIKE onde o código comece com 'a', termine com 'z' e tenha exatamente 2 caracteres desconhecidos no meio (use o underline _).",
-        type: "query", answer: "select codigo from senhas where codigo like 'a__z'",
-        placeholder: "SELECT ...",
-        hint: "O % significa 'qualquer quantidade', mas o _ (underline) significa 'exatamente UM caractere'."
-    },
-    {
-        title: "NÍVEL 19: Ordem Dupla",
-        story: "A extração de dados exige precisão. Precisamos da lista ordenada pelo andar, e depois pelo nome.",
-        schema: "Tabela: salas\nColunas: andar, nome_sala",
-        question: "Selecione TODAS as colunas da tabela 'salas', ordenando primeiro por 'andar' (Crescente - ASC) e DEPOIS por 'nome_sala' (Decrescente - DESC).",
-        type: "query", answer: "select * from salas order by andar asc, nome_sala desc",
-        placeholder: "SELECT ...",
-        hint: "Você pode colocar mais de uma coluna no ORDER BY separando com vírgulas."
-    },
-    {
-        title: "NÍVEL 20: Falsificação de Dados [BOSS BATTLE]",
-        story: "O ADMIN ESTÁ OLHANDO OS LOGS! Rápido! Altere todos os IPs que começam com '192' para '000' diretamente na saída da query para enganá-lo!",
-        schema: "Tabela: acessos\nColunas: ip_real",
-        question: "Use a função REPLACE() para selecionar a coluna 'ip_real' da tabela 'acessos', substituindo o texto '192' pelo texto '000'.",
-        type: "query", answer: "select replace(ip_real, '192', '000') from acessos",
-        placeholder: "SELECT ...",
-        hint: "Sintaxe: REPLACE(coluna, 'texto_antigo', 'texto_novo').",
-        isBoss: true
-    },
-    {
-        title: "NÍVEL 21: Atualização Matemática",
-        story: "Nós entramos no sistema financeiro. Vamos aumentar nosso bônus de intrusão.",
-        schema: "Tabela: pagamentos\nColunas: hacker_id, saldo",
-        question: "Atualize (UPDATE) a tabela 'pagamentos' definindo o 'saldo' como ele mesmo MAIS (+) 1000, onde 'hacker_id' for igual a 1.",
-        type: "query", answer: "update pagamentos set saldo = saldo + 1000 where hacker_id = 1",
-        placeholder: "UPDATE ...",
-        hint: "No SQL, você pode usar a própria coluna no cálculo: SET coluna = coluna + valor."
-    },
-    {
-        title: "NÍVEL 22: O Valor Padrão (COALESCE)",
-        story: "Se não tivermos um IP secundário gravado, o sistema quebra. Precisamos forçar um valor padrão caso seja NULO.",
-        schema: "Tabela: rotas\nColunas: id, ip_secundario",
-        question: "Use a função COALESCE() para selecionar o 'ip_secundario' da tabela 'rotas', mas se ele for NULO, retorne '0.0.0.0'.",
-        type: "query", answer: "select coalesce(ip_secundario, '0.0.0.0') from rotas",
-        placeholder: "SELECT ...",
-        hint: "COALESCE(coluna, 'valor_padrao') retorna o primeiro valor não-nulo que encontrar."
-    },
-    {
-        title: "NÍVEL 23: Agrupamento Duplo",
-        story: "A matriz de guardas é complexa. Precisamos contar quantos existem por departamento E por turno.",
-        schema: "Tabela: escala\nColunas: departamento, turno, nome",
-        question: "Selecione 'departamento', 'turno' e COUNT(*), agrupando (GROUP BY) por 'departamento' E por 'turno' (nesta ordem).",
-        type: "query", answer: "select departamento, turno, count(*) from escala group by departamento, turno",
-        placeholder: "SELECT ...",
-        hint: "Coloque os dois campos separados por vírgula no SELECT e repita os dois no GROUP BY."
-    },
-    {
-        title: "NÍVEL 24: Limpeza Temporal",
-        story: "O banco está cheio. Apague apenas os logs do ano passado.",
-        schema: "Tabela: temp_logs\nColunas: data_log",
-        question: "Dele a tabela 'temp_logs' onde a coluna 'data_log' seja MENOR (<) que a string de data '2026-01-01'.",
-        type: "query", answer: "delete from temp_logs where data_log < '2026-01-01'",
-        placeholder: "DELETE FROM ...",
-        hint: "O SQL entende datas como strings formato 'YYYY-MM-DD'. Pode usar < direto."
-    },
-    {
-        title: "NÍVEL 25: Inserção Múltipla",
-        story: "Podemos economizar tempo injetando dois vírus (registros) na mesma query.",
-        schema: "Tabela: malwares\nColunas: nome_virus",
-        question: "Escreva UM ÚNICO INSERT INTO na tabela 'malwares' na coluna (nome_virus) inserindo dois valores de uma vez: ('trojan') e ('worm').",
-        type: "query", answer: "insert into malwares (nome_virus) values ('trojan'), ('worm')",
+        title: "NÍVEL 4: Invasão Furtiva (INSERT)",
+        story: "A tabela de intrusos não tem chaves de segurança. Coloque nosso nome lá dentro para ganharmos acesso.",
+        schema: "Tabela: intrusos\nColunas: nome, nivel",
+        question: "INSERIR (INSERT INTO) na tabela 'intrusos' os valores ('neo', 99).",
+        type: "query", answer: "insert into intrusos (nome, nivel) values ('neo', 99)",
         placeholder: "INSERT INTO ...",
-        hint: "VALUES (registro1), (registro2)."
+        hint: "Forma curta: INSERT INTO tabela VALUES ('texto', numero)."
     },
     {
-        title: "NÍVEL 26: Contagem de Únicos",
-        story: "Temos mil acessos no log, mas sabemos que muitos são do mesmo IP. Quantos IPs diferentes nos atacaram?",
-        schema: "Tabela: acessos\nColunas: ip",
-        question: "Use a função COUNT() em conjunto com DISTINCT para contar apenas os 'ip' únicos da tabela 'acessos'.",
-        type: "query", answer: "select count(distinct ip) from acessos",
-        placeholder: "SELECT ...",
-        hint: "Coloque o DISTINCT dentro dos parênteses do COUNT: COUNT(DISTINCT coluna)."
-    },
-    {
-        title: "NÍVEL 27: Fatiando a Esquerda (LEFT)",
-        story: "A senha do cofre principal é apenas as 4 primeiras letras do hash mestre.",
-        schema: "Tabela: cofre\nColunas: hash_mestre",
-        question: "Use a função LEFT() para selecionar apenas os 4 primeiros caracteres (à esquerda) da coluna 'hash_mestre' da tabela 'cofre'.",
-        type: "query", answer: "select left(hash_mestre, 4) from cofre",
-        placeholder: "SELECT ...",
-        hint: "Sintaxe: SELECT LEFT(coluna, quantidade_de_letras)."
-    },
-    {
-        title: "NÍVEL 28: Fatiando a Direita (RIGHT)",
-        story: "A segunda parte da senha são os últimos 3 números do ID de lote.",
-        schema: "Tabela: lotes\nColunas: id_lote",
-        question: "Use a função RIGHT() para selecionar apenas os 3 últimos caracteres (à direita) da coluna 'id_lote' da tabela 'lotes'.",
-        type: "query", answer: "select right(id_lote, 3) from lotes",
-        placeholder: "SELECT ...",
-        hint: "Mesma lógica do LEFT, mas pegando do final da string."
-    },
-    {
-        title: "NÍVEL 29: O Inverso do Filtro",
-        story: "Precisamos de todos os dados da tabela, MENOS os da equipe Alpha.",
-        schema: "Tabela: equipes\nColunas: id, nome_equipe",
-        question: "Usando a cláusula NOT (antes do operador de igualdade não funciona, inverta a lógica), selecione TODOS (*) da tabela 'equipes' onde o nome_equipe seja diferente de 'Alpha' usando a palavra NOT.",
-        type: "query", answer: "select * from equipes where not nome_equipe = 'alpha'",
-        placeholder: "SELECT ...",
-        hint: "Você pode escrever: WHERE NOT nome_equipe = 'alpha'."
-    },
-    {
-        title: "NÍVEL 30: Reforma DDL [BOSS BATTLE]",
-        story: "O ADMIN TENTOU NOS BLOQUEAR PROCURANDO A COLUNA 'ip_hacker'! Renomeie a coluna agora para ele não encontrar nada!",
-        schema: "Tabela: rastreio\nColuna atual: ip_hacker",
-        question: "Qual o comando (ALTER TABLE) para renomear (RENAME COLUMN) a coluna 'ip_hacker' para 'ip_comum' na tabela 'rastreio'?",
-        type: "query", answer: "alter table rastreio rename column ip_hacker to ip_comum",
-        placeholder: "ALTER TABLE ...",
-        hint: "Sintaxe DDL do MySQL 8.0+: ALTER TABLE tabela RENAME COLUMN nome_velho TO nome_novo.",
-        isBoss: true
-    },
-    // ==========================================
-    // FASE 3: ENGENHARIA DE DADOS (DIFÍCIL)
-    // ==========================================
-    {
-        title: "NÍVEL 31: Dados Fantasmas (LEFT JOIN)",
-        story: "Precisamos listar TODOS os funcionários, mesmo os que não têm nenhum acesso cadastrado.",
-        schema: "Tabelas: funcionarios (id, nome) | acessos (id_func, nivel)",
-        question: "Escreva um LEFT JOIN trazendo TODAS (*) as colunas de 'funcionarios' (à esquerda) e cruzando com 'acessos' na chave funcionarios.id = acessos.id_func.",
-        type: "query", answer: "select * from funcionarios left join acessos on funcionarios.id = acessos.id_func",
-        placeholder: "SELECT ...",
-        hint: "O LEFT JOIN garante que a tabela da esquerda (funcionarios) sempre exiba todos os registros."
-    },
-    {
-        title: "NÍVEL 32: Encontrando as Falhas",
-        story: "Houve uma falha. Alguns funcionários foram cadastrados SEM cartão de acesso físico. Vamos encontrá-los.",
-        schema: "Tabelas: funcionarios (id, nome) | cartoes (id_func, codigo)",
-        question: "Faça o mesmo LEFT JOIN anterior entre funcionarios e cartoes, mas adicione um filtro: WHERE cartoes.id_func IS NULL.",
-        type: "query", answer: "select * from funcionarios left join cartoes on funcionarios.id = cartoes.id_func where cartoes.id_func is null",
-        placeholder: "SELECT ...",
-        hint: "Este é o clássico 'LEFT JOIN EXCLUSIVO' para achar registros órfãos."
-    },
-    {
-        title: "NÍVEL 33: A Inversão (RIGHT JOIN)",
-        story: "Agora queremos ver TODOS os cartões criados, mesmo que não estejam associados a nenhum funcionário (Cartões avulsos).",
-        schema: "Tabelas: funcionarios (id, nome) | cartoes (id_func, codigo)",
-        question: "Escreva um RIGHT JOIN trazendo TODAS (*) as colunas, com 'funcionarios' à esquerda e 'cartoes' à direita (funcionarios.id = cartoes.id_func).",
-        type: "query", answer: "select * from funcionarios right join cartoes on funcionarios.id = cartoes.id_func",
-        placeholder: "SELECT ...",
-        hint: "Mesma estrutura do LEFT JOIN, mas use RIGHT JOIN para priorizar a tabela 2."
-    },
-    {
-        title: "NÍVEL 34: Unindo Forças (UNION)",
-        story: "Temos duas tabelas de logs diferentes (servidor A e B). Precisamos de uma lista única de IPs.",
-        schema: "Tabelas: log_a (ip), log_b (ip)",
-        question: "Use o operador UNION para juntar o resultado de (SELECT ip FROM log_a) com o de (SELECT ip FROM log_b).",
-        type: "query", answer: "select ip from log_a union select ip from log_b",
-        placeholder: "SELECT ... UNION ...",
-        hint: "O UNION junta os resultados verticalmente e remove os IPs duplicados automaticamente."
-    },
-    {
-        title: "NÍVEL 35: União Completa (UNION ALL)",
-        story: "A polícia cibernética está contando os IPs. Precisamos da união das tabelas, mas AGORA mantendo as duplicatas para o número parecer maior.",
-        schema: "Tabelas: log_a (ip), log_b (ip)",
-        question: "Faça a mesma query do nível anterior, mas use UNION ALL para manter as repetições.",
-        type: "query", answer: "select ip from log_a union all select ip from log_b",
-        placeholder: "SELECT ... UNION ALL ...",
-        hint: "O UNION ALL é muito mais rápido que o UNION pois não gasta tempo removendo duplicatas."
-    },
-    {
-        title: "NÍVEL 36: Subquery no SELECT",
-        story: "Precisamos listar os nomes dos recrutas e comparar a nota deles com a nota máxima de toda a academia na mesma linha.",
-        schema: "Tabela: notas\nColunas: nome, nota",
-        question: "Selecione o 'nome', e como segunda coluna crie uma subquery: (SELECT MAX(nota) FROM notas). Tudo isso FROM notas.",
-        type: "query", answer: "select nome, (select max(nota) from notas) from notas",
-        placeholder: "SELECT nome, (...) FROM ...",
-        hint: "Você pode executar um SELECT independente dentro dos parênteses como se fosse uma coluna."
-    },
-    {
-        title: "NÍVEL 37: Lógica Condicional (CASE WHEN)",
-        story: "O banco de dados não diz se é bom ou ruim, apenas tem o nível. Vamos classificar na força bruta.",
-        schema: "Tabela: ameacas\nColunas: nivel",
-        question: "Escreva a query: SELECT CASE WHEN nivel > 5 THEN 'alto' ELSE 'baixo' END FROM ameacas.",
-        type: "query", answer: "select case when nivel > 5 then 'alto' else 'baixo' end from ameacas",
-        placeholder: "SELECT CASE WHEN ...",
-        hint: "O CASE WHEN é o 'IF/ELSE' do banco de dados."
-    },
-    {
-        title: "NÍVEL 38: Update Condicional",
-        story: "Se a porta for a principal (id=1), tranque (status=0). Senão, destranque (status=1). Tudo num comando só.",
-        schema: "Tabela: portas\nColunas: id, status",
-        question: "UPDATE portas SET status = CASE WHEN id = 1 THEN 0 ELSE 1 END.",
-        type: "query", answer: "update portas set status = case when id = 1 then 0 else 1 end",
+        title: "NÍVEL 5: Sabotagem Simples (UPDATE)",
+        story: "Os alarmes do saguão vão disparar. Desligue todos eles de uma vez só.",
+        schema: "Tabela: alarmes\nColunas: id, status",
+        question: "Atualize (UPDATE) a tabela 'alarmes' definindo 'status' = 'off' (sem usar WHERE, altere todos).",
+        type: "query", answer: "update alarmes set status = 'off'",
         placeholder: "UPDATE ...",
-        hint: "Copie exatamente o comando da pergunta para entender como o MySQL processa IFs num Update."
+        hint: "Sintaxe curta: UPDATE tabela SET coluna = 'valor'."
     },
     {
-        title: "NÍVEL 39: O Triplo Cruzamento (3 Tabelas)",
-        story: "O desafio arquitetural. Para saber quem abriu o cofre, precisamos ligar o Usuário ao Cartão, e o Cartão à Fechadura.",
-        schema: "Tabelas (FKs): usuarios (id_u), cartoes (id_c, id_u), fechaduras (id_f, id_c)",
-        question: "SELECT * FROM usuarios INNER JOIN cartoes ON usuarios.id_u = cartoes.id_u INNER JOIN fechaduras ON cartoes.id_c = fechaduras.id_c.",
-        type: "query", answer: "select * from usuarios inner join cartoes on usuarios.id_u = cartoes.id_u inner join fechaduras on cartoes.id_c = fechaduras.id_c",
-        placeholder: "SELECT ... INNER JOIN ... INNER JOIN ...",
-        hint: "Basta encadear os JOINs sucessivamente."
+        title: "NÍVEL 6: Queima de Arquivo Específico (DELETE)",
+        story: "A tabela de logs de entrada registrou o nosso IP '192.168.0.1'. Apague apenas o nosso rastro.",
+        schema: "Tabela: logs_entrada\nColunas: id, ip",
+        question: "Delete (DELETE FROM) da tabela 'logs_entrada' ONDE o 'ip' seja igual a '192.168.0.1'.",
+        type: "query", answer: "delete from logs_entrada where ip = '192.168.0.1'",
+        placeholder: "DELETE FROM ...",
+        hint: "Use a cláusula WHERE para apagar apenas o registro certo: DELETE FROM tabela WHERE condicao."
     },
     {
-        title: "NÍVEL 40: Criação Rápida [BOSS BATTLE]",
-        story: "ELES APAGARAM A TABELA DO NOSSO HACK! RECONSTRUA A TABELA IMEDIATAMENTE ANTES QUE O SISTEMA DÊ CRASH!",
-        schema: "Estrutura exigida: tabela 'clones' com coluna 'id' do tipo INT.",
-        question: "Escreva a instrução DDL exata: CREATE TABLE clones (id INT).",
-        type: "query", answer: "create table clones (id int)",
-        placeholder: "CREATE TABLE ...",
-        hint: "Sintaxe: CREATE TABLE nome (coluna TIPO).",
+        title: "NÍVEL 7: Verificação de Rota (SELECT)",
+        story: "Limpeza feita. Agora precisamos de todos os dados da rede interna para pularmos de servidor.",
+        schema: "Tabela: rede\nColunas: id, ip, ping",
+        question: "Selecione TODAS (*) as colunas da tabela 'rede'.",
+        type: "query", answer: "select * from rede",
+        placeholder: "SELECT ...",
+        hint: "O SELECT mais famoso de todos: SELECT * FROM tabela."
+    },
+    {
+        title: "NÍVEL 8: O Mínimo Necessário",
+        story: "A tabela é muito grande para baixar. Traga apenas os nomes dos servidores.",
+        schema: "Tabela: servidores\nColunas: id, nome, ip",
+        question: "Selecione APENAS a coluna 'nome' da tabela 'servidores'.",
+        type: "query", answer: "select nome from servidores",
+        placeholder: "SELECT ...",
+        hint: "Substitua o asterisco (*) apenas pelo nome da coluna que você quer trazer."
+    },
+    {
+        title: "NÍVEL 9: Foco no Alvo Principal",
+        story: "O alvo que guarda o item lendário tem o ID igual a 7. Traga todos os dados apenas dele.",
+        schema: "Tabela: alvos\nColunas: id, nome, perigo",
+        question: "Selecione TODAS (*) as colunas da tabela 'alvos' ONDE o 'id' seja igual a 7.",
+        type: "query", answer: "select * from alvos where id = 7",
+        placeholder: "SELECT ...",
+        hint: "Junte o seu SELECT * com a cláusula WHERE para filtrar."
+    },
+    {
+        title: "NÍVEL 10: Apagão de Dados [BOSS BATTLE]",
+        story: "O ANTIVÍRUS COMEÇOU A LER A TABELA TEMPORÁRIA! NÃO TEMOS TEMPO PARA APAGAR UM POR UM!",
+        schema: "Tabela: logs_temp",
+        question: "Escreva a query para DELETAR todos os registros da tabela 'logs_temp' (Dica: apague tudo de uma vez sem usar o WHERE).",
+        type: "query", answer: "delete from logs_temp",
+        placeholder: "DELETE FROM ...",
+        hint: "O comando DELETE sem o WHERE varre todas as linhas da tabela em um único golpe, esvaziando-a.",
         isBoss: true
     },
+
+    // --- FASE 2: MANIPULAÇÃO DE ATRIBUTOS DML (11 a 20) ---
     {
-        title: "NÍVEL 41: O Operador de Existência (EXISTS)",
-        story: "A query fica lenta se verificarmos dados. Vamos apenas checar se a linha EXISTE para confirmar o roubo.",
-        schema: "Tabela: log_roubo\nColunas: ip",
-        question: "Selecione o 'ip' da tabela 'log_roubo' ONDE EXISTIR (WHERE EXISTS) o registro na subquery (SELECT 1 FROM log_roubo WHERE ip='1.1.1.1').",
-        type: "query", answer: "select ip from log_roubo where exists (select 1 from log_roubo where ip='1.1.1.1')",
-        placeholder: "SELECT ... WHERE EXISTS (...)",
-        hint: "O EXISTS retorna True e interrompe a busca na primeira vez que achar algo, poupando processamento."
+        title: "NÍVEL 11: Injeção Específica",
+        story: "O jogo tem muitas colunas escondidas. Vamos criar um perfil definindo apenas o que importa.",
+        schema: "Tabela: players\nColunas a preencher: nome, classe",
+        question: "INSERIR na tabela 'players', apenas nas colunas (nome, classe), os valores ('ghost', 'sniper').",
+        type: "query", answer: "insert into players (nome, classe) values ('ghost', 'sniper')",
+        placeholder: "INSERT INTO ...",
+        hint: "Especifique as colunas antes da palavra VALUES."
     },
     {
-        title: "NÍVEL 42: Restrição de Integridade (UNIQUE)",
-        story: "Para evitar que criem outro usuário com nosso nome, vamos travar a coluna de login no banco de dados.",
-        schema: "Tabela: contas",
-        question: "Escreva o comando ALTER TABLE contas ADD UNIQUE (login). Isso impedirá logins duplicados.",
-        type: "query", answer: "alter table contas add unique (login)",
-        placeholder: "ALTER TABLE ...",
-        hint: "Adicionar restrições (Constraints) garante a saúde do banco."
+        title: "NÍVEL 12: Hackeando a Economia",
+        story: "Nossa conta está zerada. Vamos burlar o saldo da loja.",
+        schema: "Tabela: carteira\nColunas: id_player, moedas",
+        question: "Atualize a tabela 'carteira' definindo 'moedas' = 9999 onde o 'id_player' for igual a 1.",
+        type: "query", answer: "update carteira set moedas = 9999 where id_player = 1",
+        placeholder: "UPDATE ...",
+        hint: "O comando é UPDATE tabela SET coluna = valor WHERE condicao."
     },
     {
-        title: "NÍVEL 43: Acelerador (CREATE INDEX)",
-        story: "O banco de dados tem 50 milhões de linhas. Nosso script está dando Timeout (Timeout_Error). Crie um índice para acelerar a busca!",
-        schema: "Tabela: big_data\nColuna para indexar: cpf",
-        question: "Crie um índice chamado 'idx_cpf' na tabela 'big_data' para a coluna 'cpf'. (CREATE INDEX idx_cpf ON big_data(cpf)).",
-        type: "query", answer: "create index idx_cpf on big_data(cpf)",
-        placeholder: "CREATE INDEX ...",
-        hint: "Os Índices (Indexes) funcionam como o sumário de um livro: a busca fica instantânea."
+        title: "NÍVEL 13: Upgrades Simultâneos",
+        story: "Mude de classe e aumente seu escudo ao mesmo tempo para o combate.",
+        schema: "Tabela: status_player\nColunas: id, classe, escudo",
+        question: "Atualize a tabela 'status_player' definindo 'classe' = 'tank' e (vírgula) 'escudo' = 1000 onde o 'id' = 1.",
+        type: "query", answer: "update status_player set classe = 'tank', escudo = 1000 where id = 1",
+        placeholder: "UPDATE ...",
+        hint: "Separe as colunas a atualizar com vírgula: SET col1 = val1, col2 = val2."
     },
     {
-        title: "NÍVEL 44: Destruindo o Acelerador",
-        story: "A OmniSec usou nosso próprio índice contra nós para rastrear nossas queries. Destrua o índice!",
-        schema: "Tabela: big_data\nÍndice criado: idx_cpf",
-        question: "Derrube (DROP INDEX) o índice 'idx_cpf' da tabela 'big_data'.",
-        type: "query", answer: "drop index idx_cpf on big_data",
-        placeholder: "DROP INDEX ...",
-        hint: "Sintaxe DDL: DROP INDEX nome_do_indice ON tabela."
+        title: "NÍVEL 14: Matemática no Banco",
+        story: "A loja está muito cara. Cortaremos o preço do item pela metade direto no banco de dados.",
+        schema: "Tabela: loja\nColunas: item, preco",
+        question: "Atualize a 'loja', definindo 'preco' = preco / 2 ONDE o 'item' for 'pocao'.",
+        type: "query", answer: "update loja set preco = preco / 2 where item = 'pocao'",
+        placeholder: "UPDATE ...",
+        hint: "Você pode referenciar a própria coluna no cálculo: SET preco = preco / 2."
     },
     {
-        title: "NÍVEL 45: A Janela Falsa (CREATE VIEW)",
-        story: "Para o sistema não perceber o roubo, vamos criar uma Visão (View) falsa que oculta as colunas sensíveis.",
-        schema: "Query da visão: SELECT id FROM usuarios",
-        question: "Crie uma VIEW chamada 'tela_falsa' AS SELECT id FROM usuarios.",
-        type: "query", answer: "create view tela_falsa as select id from usuarios",
-        placeholder: "CREATE VIEW ...",
-        hint: "Uma View é uma tabela virtual baseada em uma Query."
+        title: "NÍVEL 15: Anistia Hacker",
+        story: "Um dos nossos aliados foi banido do servidor. Remova a punição dele.",
+        schema: "Tabela: banimentos\nColunas: nick, motivo",
+        question: "Delete os registros da tabela 'banimentos' onde o 'nick' seja igual a 'ghost'.",
+        type: "query", answer: "delete from banimentos where nick = 'ghost'",
+        placeholder: "DELETE FROM ...",
+        hint: "Comando DELETE FROM tabela WHERE condicao."
     },
     {
-        title: "NÍVEL 46: Limpando a Visão",
-        story: "A investigação começou. Derrube a View que criamos para apagar os vestígios.",
-        schema: "View: tela_falsa",
-        question: "Qual o comando DDL para deletar a view 'tela_falsa'?",
-        type: "query", answer: "drop view tela_falsa",
-        placeholder: "DROP VIEW ...",
-        hint: "Assim como Drop Table e Drop Index, use DROP VIEW nome."
+        title: "NÍVEL 16: Limpando Inventário",
+        story: "Seu inventário está cheio de lixo de nível baixo. Vamos apagá-los.",
+        schema: "Tabela: inventario\nColunas: item, level",
+        question: "Delete da tabela 'inventario' onde o 'item' seja 'lixo' E (AND) o 'level' seja MENOR (<) que 5.",
+        type: "query", answer: "delete from inventario where item = 'lixo' and level < 5",
+        placeholder: "DELETE FROM ...",
+        hint: "Use o operador lógico AND para juntar as duas condições no seu DELETE."
     },
     {
-        title: "NÍVEL 47: Remoção de Privilégios (REVOKE)",
-        story: "Estamos no controle do servidor. O usuário do administrador original da OmniSec se chama 'admin'. Remova o poder dele de dar UPDATE.",
-        schema: "Usuário: 'admin'@'localhost'",
-        question: "REVOKE UPDATE ON *.* FROM 'admin'@'localhost'.",
-        type: "query", answer: "revoke update on *.* from 'admin'@'localhost'",
-        placeholder: "REVOKE ...",
-        hint: "O comando REVOKE retira permissões. O *.* significa todos os bancos e tabelas."
+        title: "NÍVEL 17: O Único Leitura",
+        story: "Precisamos verificar se o administrador está online antes de darmos o próximo passo.",
+        schema: "Tabela: servidores\nColunas: ip, status",
+        question: "Selecione TODAS (*) as colunas de 'servidores' onde o 'status' seja 'online'.",
+        type: "query", answer: "select * from servidores where status = 'online'",
+        placeholder: "SELECT ...",
+        hint: "A sintaxe básica do filtro de leitura."
     },
     {
-        title: "NÍVEL 48: Subquery Complexa (Maior que a Média)",
-        story: "A OmniSec transferiu o dinheiro das contas que têm mais saldo que a média do banco.",
-        schema: "Tabela: contas\nColunas: id, saldo",
-        question: "Selecione o 'id' da tabela 'contas' WHERE 'saldo' seja MAIOR (>) que (SELECT AVG(saldo) FROM contas).",
-        type: "query", answer: "select id from contas where saldo > (select avg(saldo) from contas)",
-        placeholder: "SELECT ... WHERE ... > (SELECT ...)",
-        hint: "Subqueries matemáticas são extremamente usadas para relatórios de Business Intelligence."
+        title: "NÍVEL 18: Caçando os Fortes",
+        story: "Não perca tempo com novatos. Queremos apenas as guildas de elite.",
+        schema: "Tabela: guildas\nColunas: nome, rank",
+        question: "Selecione o 'nome' da tabela 'guildas' onde o 'rank' seja MAIOR (>) que 10.",
+        type: "query", answer: "select nome from guildas where rank > 10",
+        placeholder: "SELECT ...",
+        hint: "Use o sinal matemático > no WHERE."
     },
     {
-        title: "NÍVEL 49: O Fim do Root",
-        story: "A Inteligência Artificial central está quase nos rastreando fisicamente. Apague a existência do nosso usuário infiltrado.",
-        schema: "Usuário atual no SGBD: 'neo'@'localhost'",
-        question: "Use o comando DROP USER para extinguir o usuário 'neo'@'localhost'.",
-        type: "query", answer: "drop user 'neo'@'localhost'",
-        placeholder: "DROP USER ...",
-        hint: "A sintaxe exige as aspas no nome e no host: DROP USER 'usuario'@'host'."
+        title: "NÍVEL 19: O Último da Fila",
+        story: "Queremos descobrir qual foi a última pessoa que se conectou.",
+        schema: "Tabela: conexoes\nColunas: id, ip",
+        question: "Selecione o 'ip' de 'conexoes', ordenando pelo 'id' de forma DECRESCENTE (DESC) e limitando (LIMIT) a 1 linha.",
+        type: "query", answer: "select ip from conexoes order by id desc limit 1",
+        placeholder: "SELECT ...",
+        hint: "Combine o ORDER BY DESC com o LIMIT 1 no final da query."
     },
     {
-        title: "NÍVEL 50: DESTRUIÇÃO MUTUAMENTE ASSEGURADA [FINAL BOSS]",
-        story: "ELES NOS CERCAM! NÃO HÁ MAIS SAÍDA! Puxe o gatilho. Destrua o SGBD inteiro. Apague TODAS AS EVIDÊNCIAS DESTE MUNDO!",
-        schema: "Banco de dados: omnisec_mainframe",
-        question: "Qual o comando DDL derradeiro para excluir o banco de dados 'omnisec_mainframe' para todo o sempre?",
-        type: "query", answer: "drop database omnisec_mainframe",
+        title: "NÍVEL 20: Terraplanagem [BOSS BATTLE]",
+        story: "O ARQUIVO DE RASTREAMENTO DETECTOU NOSSO PING! DESTRUA A TABELA INTEIRA DA EXISTÊNCIA!",
+        schema: "Tabela: rastreador",
+        question: "Qual comando estrutural (DDL) apaga/destrói completamente a tabela 'rastreador'?",
+        type: "query", answer: "drop table rastreador",
         placeholder: "DROP ...",
-        hint: "O comando mais perigoso do SQL, que só um DBA Master utiliza: DROP DATABASE.",
+        hint: "Comando estrutural de destruição: DROP TABLE nome_tabela.",
+        isBoss: true
+    },
+
+    // --- FASE 3: CRIAÇÃO E FILTROS LÓGICOS (21 a 30) ---
+    {
+        title: "NÍVEL 21: O Novo Mundo",
+        story: "O servidor deles está sob nosso controle. Vamos criar nossa própria base de dados secreta para guardar o que roubarmos.",
+        schema: "Ambiente Global",
+        question: "Qual o comando (DDL) para CRIAR um banco de dados chamado 'shadow_net'?",
+        type: "query", answer: "create database shadow_net",
+        placeholder: "CREATE DATABASE ...",
+        hint: "Sintaxe DDL: CREATE DATABASE nome."
+    },
+    {
+        title: "NÍVEL 22: O Espelho",
+        story: "Crie uma tabela para espelhar os dados roubados.",
+        schema: "Tabela: espelho\nColunas: id (int), nome (varchar)",
+        question: "Escreva o comando para CRIAR a tabela 'espelho' com as colunas (id int, nome varchar).",
+        type: "query", answer: "create table espelho (id int, nome varchar)",
+        placeholder: "CREATE TABLE ...",
+        hint: "Sintaxe: CREATE TABLE nome (col1 tipo, col2 tipo)."
+    },
+    {
+        title: "NÍVEL 23: Fortalecendo as Defesas",
+        story: "Nossa tabela de defesas precisa de um botão de pânico.",
+        schema: "Tabela: defesas\nNova coluna: falha (boolean)",
+        question: "Altere a tabela (ALTER TABLE) 'defesas' para adicionar a coluna (ADD COLUMN) 'falha' do tipo 'boolean'.",
+        type: "query", answer: "alter table defesas add column falha boolean",
+        placeholder: "ALTER TABLE ...",
+        hint: "Sintaxe: ALTER TABLE tabela ADD COLUMN coluna tipo."
+    },
+    {
+        title: "NÍVEL 24: Armas Pesadas",
+        story: "Precisamos de equipamentos potentes. Sabemos que o nome começa com 'sniper'.",
+        schema: "Tabela: armas\nColunas: nome",
+        question: "Selecione o 'nome' de 'armas' onde o nome comece com 'sniper' (Use LIKE).",
+        type: "query", answer: "select nome from armas where nome like 'sniper%'",
+        placeholder: "SELECT ...",
+        hint: "No LIKE, use o sinal de % no final da palavra."
+    },
+    {
+        title: "NÍVEL 25: O Fim da Pista",
+        story: "Encontre os e-mails dos administradores que terminam com '@admin.com'.",
+        schema: "Tabela: contatos\nColunas: email",
+        question: "Selecione o 'email' da tabela 'contatos' onde o email termine com '@admin.com'.",
+        type: "query", answer: "select email from contatos where email like '%@admin.com'",
+        placeholder: "SELECT ...",
+        hint: "No LIKE, coloque o % antes da palavra."
+    },
+    {
+        title: "NÍVEL 26: Lacunas no Sistema",
+        story: "Muitos bots de segurança foram registrados sem número de série (nulo). Esses são fáceis de desligar.",
+        schema: "Tabela: bots\nColunas: id, num_serie",
+        question: "Selecione o 'id' da tabela 'bots' onde o 'num_serie' seja nulo/vazio.",
+        type: "query", answer: "select id from bots where num_serie is null",
+        placeholder: "SELECT ...",
+        hint: "Não testamos nulos com '='. Usamos IS NULL."
+    },
+    {
+        title: "NÍVEL 27: Dados Confiáveis",
+        story: "Para transferir, o destino precisa ter um certificado validado (não nulo).",
+        schema: "Tabela: validos\nColunas: ip, certificado",
+        question: "Selecione o 'ip' de 'validos' onde o 'certificado' NÃO seja nulo.",
+        type: "query", answer: "select ip from validos where certificado is not null",
+        placeholder: "SELECT ...",
+        hint: "O inverso da regra anterior é IS NOT NULL."
+    },
+    {
+        title: "NÍVEL 28: Redundância",
+        story: "A lista de logs tem setores repetidos. Queremos saber os setores reais de forma limpa.",
+        schema: "Tabela: logs\nColunas: setor",
+        question: "Selecione APENAS os valores ÚNICOS e sem repetição da coluna 'setor' da tabela 'logs'.",
+        type: "query", answer: "select distinct setor from logs",
+        placeholder: "SELECT ...",
+        hint: "Use a palavra DISTINCT logo após o SELECT."
+    },
+    {
+        title: "NÍVEL 29: Máscara de Anonimato",
+        story: "Vamos esconder a coluna 'saldo' mudando o nome de exibição dela.",
+        schema: "Tabela: banco\nColunas: saldo",
+        question: "Selecione a coluna 'saldo' da tabela 'banco', mas a renomeie na saída para 'moedas' (usando AS).",
+        type: "query", answer: "select saldo as moedas from banco",
+        placeholder: "SELECT ...",
+        hint: "Coloque 'AS novo_nome' depois da coluna."
+    },
+    {
+        title: "NÍVEL 30: Múltiplos Alvos [BOSS BATTLE]",
+        story: "A IA ESTÁ BLOQUEANDO O FIREWALL 1 E O FIREWALL 2. DESLIGUE OS DOIS AO MESMO TEMPO ANTES DE SERMOS PEGOS!",
+        schema: "Tabela: defesas\nColunas: id, status",
+        question: "Atualize 'defesas' definindo 'status' = 'off' ONDE o 'id' = 1 OU (OR) 'id' = 2.",
+        type: "query", answer: "update defesas set status = 'off' where id = 1 or id = 2",
+        placeholder: "UPDATE ...",
+        hint: "Use o operador lógico OR no WHERE do seu UPDATE.",
+        isBoss: true
+    },
+
+    // --- FASE 4: MATEMÁTICA E AGREGAÇÕES (31 a 40) ---
+    {
+        title: "NÍVEL 31: O Tamanho do Exército",
+        story: "Quantos drones de segurança existem na malha do servidor?",
+        schema: "Tabela: drones",
+        question: "Use a função agregadora para CONTAR o número total de registros da tabela 'drones'.",
+        type: "query", answer: "select count(*) from drones",
+        placeholder: "SELECT ...",
+        hint: "A função é COUNT(*)."
+    },
+    {
+        title: "NÍVEL 32: O Jogador Supremo",
+        story: "Qual é o maior level registrado no servidor do jogo?",
+        schema: "Tabela: players\nColunas: level",
+        question: "Use a função agregadora para trazer o MÁXIMO da coluna 'level' da tabela 'players'.",
+        type: "query", answer: "select max(level) from players",
+        placeholder: "SELECT ...",
+        hint: "A função é MAX(coluna)."
+    },
+    {
+        title: "NÍVEL 33: A Rota Mais Curta",
+        story: "Precisamos do menor tempo de resposta (ping) para enviar os pacotes.",
+        schema: "Tabela: rotas\nColunas: ping",
+        question: "Use a função agregadora para trazer o MÍNIMO da coluna 'ping' da tabela 'rotas'.",
+        type: "query", answer: "select min(ping) from rotas",
+        placeholder: "SELECT ...",
+        hint: "A função é MIN(coluna)."
+    },
+    {
+        title: "NÍVEL 34: Jackpot",
+        story: "Vamos limpar o cofre. Qual o valor total de ouro se somarmos tudo?",
+        schema: "Tabela: cofres\nColunas: gold",
+        question: "Use a função agregadora para SOMAR toda a coluna 'gold' da tabela 'cofres'.",
+        type: "query", answer: "select sum(gold) from cofres",
+        placeholder: "SELECT ...",
+        hint: "A função é SUM(coluna)."
+    },
+    {
+        title: "NÍVEL 35: O Padrão Inimigo",
+        story: "Nossos personagens precisam ter o mesmo dano médio para se camuflar.",
+        schema: "Tabela: armas\nColunas: dano",
+        question: "Use a função agregadora para calcular a MÉDIA da coluna 'dano' da tabela 'armas'.",
+        type: "query", answer: "select avg(dano) from armas",
+        placeholder: "SELECT ...",
+        hint: "A função é AVG(coluna)."
+    },
+    {
+        title: "NÍVEL 36: Contagem de Falhas",
+        story: "Quantos relatórios o sistema gerou marcados como alta severidade?",
+        schema: "Tabela: falhas\nColunas: severidade",
+        question: "Traga a contagem total (COUNT(*)) da tabela 'falhas' onde a 'severidade' for 'alta'.",
+        type: "query", answer: "select count(*) from falhas where severidade = 'alta'",
+        placeholder: "SELECT ...",
+        hint: "Você pode filtrar funções matemáticas usando o WHERE normalmente no final."
+    },
+    {
+        title: "NÍVEL 37: Fragmentação de Tropas",
+        story: "Quantos guardas existem distribuídos por cada setor de segurança?",
+        schema: "Tabela: guardas\nColunas: setor",
+        question: "Traga o 'setor' e a contagem (COUNT(*)) da tabela 'guardas', agrupando a resposta pelo 'setor'.",
+        type: "query", answer: "select setor, count(*) from guardas group by setor",
+        placeholder: "SELECT ...",
+        hint: "Use GROUP BY na coluna de texto no final da query."
+    },
+    {
+        title: "NÍVEL 38: Analisando as Classes",
+        story: "Qual o level máximo atingido por cada classe diferente de personagem?",
+        schema: "Tabela: players\nColunas: classe, level",
+        question: "Traga a 'classe' e o MÁXIMO do 'level' da tabela 'players', agrupando pela 'classe'.",
+        type: "query", answer: "select classe, max(level) from players group by classe",
+        placeholder: "SELECT ...",
+        hint: "Mesma lógica do agrupamento anterior, mas com a função MAX()."
+    },
+    {
+        title: "NÍVEL 39: Ranking de Riqueza",
+        story: "Quanto de ouro cada guilda possui somada?",
+        schema: "Tabela: cofres\nColunas: guilda, gold",
+        question: "Traga a 'guilda' e a SOMA (SUM) do 'gold' da tabela 'cofres', agrupando pela 'guilda'.",
+        type: "query", answer: "select guilda, sum(gold) from cofres group by guilda",
+        placeholder: "SELECT ...",
+        hint: "Aplica-se o SUM e o GROUP BY."
+    },
+    {
+        title: "NÍVEL 40: Zero Absoluto [BOSS BATTLE]",
+        story: "OS RASTREADORES ESTÃO LENDO A COLUNA DE IP DOS LOGS! ZERE TODOS OS IPs IMEDIATAMENTE!",
+        schema: "Tabela: logs\nColunas: ip",
+        question: "Atualize a tabela 'logs' mudando o 'ip' para '0.0.0.0' em TODOS os registros (sem WHERE).",
+        type: "query", answer: "update logs set ip = '0.0.0.0'",
+        placeholder: "UPDATE ...",
+        hint: "Um UPDATE sem WHERE zera a tabela inteira instantaneamente.",
+        isBoss: true
+    },
+
+    // --- FASE 5: ARQUITETURA E CRUZAMENTOS (41 a 50) ---
+    {
+        title: "NÍVEL 41: O Elo Perdido (INNER JOIN)",
+        story: "Para saber o nome da guilda do jogador, cruze as duas tabelas pela chave de ID.",
+        schema: "Tabelas: herois (id_guilda) | guildas (id)",
+        question: "Faça um INNER JOIN de tudo (*), cruzando 'herois' com 'guildas' (ON herois.id_guilda = guildas.id).",
+        type: "query", answer: "select * from herois inner join guildas on herois.id_guilda = guildas.id",
+        placeholder: "SELECT ... INNER JOIN ... ON ...",
+        hint: "Sintaxe padrão do cruzamento: SELECT * FROM t1 INNER JOIN t2 ON t1.fk = t2.pk."
+    },
+    {
+        title: "NÍVEL 42: O Elo Filtrado",
+        story: "Cruze logs e erros, mas mostre apenas os logs de nível 'critico'.",
+        schema: "Tabelas: logs (id_erro, nivel) | erros (id)",
+        question: "INNER JOIN de 'logs' com 'erros' (ON logs.id_erro = erros.id) e filtre com WHERE logs.nivel = 'critico'. Selecione tudo (*).",
+        type: "query", answer: "select * from logs inner join erros on logs.id_erro = erros.id where logs.nivel = 'critico'",
+        placeholder: "SELECT ...",
+        hint: "A cláusula WHERE vai sempre no final do comando JOIN."
+    },
+    {
+        title: "NÍVEL 43: Preservando Dados (LEFT JOIN)",
+        story: "Traga TODOS os players, mesmo aqueles que ainda não possuem banimento associado.",
+        schema: "Tabelas: players (id) | banimentos (id_player)",
+        question: "Traga tudo (*) de 'players' fazendo um LEFT JOIN com 'banimentos' (ON players.id = banimentos.id_player).",
+        type: "query", answer: "select * from players left join banimentos on players.id = banimentos.id_player",
+        placeholder: "SELECT ... LEFT JOIN ...",
+        hint: "O LEFT JOIN garante que a primeira tabela não perca linhas se a ligação não existir."
+    },
+    {
+        title: "NÍVEL 44: A Visão Oposta (RIGHT JOIN)",
+        story: "Traga TODOS os itens comprados, mesmo aqueles que bugaram e não têm player.",
+        schema: "Tabelas: compras (id_item) | itens (id)",
+        question: "Traga tudo (*) fazendo um RIGHT JOIN de 'compras' com 'itens' (ON compras.id_item = itens.id).",
+        type: "query", answer: "select * from compras right join itens on compras.id_item = itens.id",
+        placeholder: "SELECT ... RIGHT JOIN ...",
+        hint: "Exatamente a mesma sintaxe, apenas trocando a palavra para RIGHT."
+    },
+    {
+        title: "NÍVEL 45: JOIN com Ordem",
+        story: "Liste os players e suas guildas, mas mostre em ordem alfabética do nome do player.",
+        schema: "Tabelas: players (id_guilda, nome) | guildas (id, nome)",
+        question: "INNER JOIN (ON players.id_guilda = guildas.id) selecionando players.nome e guildas.nome. Finalize com ORDER BY players.nome ASC.",
+        type: "query", answer: "select players.nome, guildas.nome from players inner join guildas on players.id_guilda = guildas.id order by players.nome asc",
+        placeholder: "SELECT ...",
+        hint: "Use o padrão tabela.coluna no SELECT para não gerar erro de ambiguidade."
+    },
+    {
+        title: "NÍVEL 46: Cruzamento Analítico",
+        story: "Quantos jogadores existem em cada guilda? Mostre o nome da guilda e a contagem.",
+        schema: "Tabelas: players (id_guilda) | guildas (id, nome)",
+        question: "INNER JOIN (ON players.id_guilda = guildas.id). Selecione guildas.nome e COUNT(*), agrupando (GROUP BY) por guildas.nome.",
+        type: "query", answer: "select guildas.nome, count(*) from players inner join guildas on players.id_guilda = guildas.id group by guildas.nome",
+        placeholder: "SELECT ...",
+        hint: "Uma combinação de JOIN com GROUP BY."
+    },
+    {
+        title: "NÍVEL 47: A Mega Estrutura",
+        story: "Cruze 3 relatórios de rede através dos IPs para descobrir a origem.",
+        schema: "Tabelas: log_a (ip), log_b (ip), log_c (ip)",
+        question: "Traga tudo (*) com INNER JOIN de log_a com log_b (ON log_a.ip = log_b.ip) e outro INNER JOIN de log_b com log_c (ON log_b.ip = log_c.ip).",
+        type: "query", answer: "select * from log_a inner join log_b on log_a.ip = log_b.ip inner join log_c on log_b.ip = log_c.ip",
+        placeholder: "SELECT ... INNER JOIN ... INNER JOIN ...",
+        hint: "Basta encadear os JOINs um após o outro na mesma linha."
+    },
+    {
+        title: "NÍVEL 48: Limpeza Lógica",
+        story: "A polícia chegou no servidor. Apague os players que são level baixo ou já foram banidos.",
+        schema: "Tabela: players\nColunas: level, status",
+        question: "Delete de 'players' onde o 'level' for MENOR (<) que 5 OU (OR) o 'status' for 'banido'.",
+        type: "query", answer: "delete from players where level < 5 or status = 'banido'",
+        placeholder: "DELETE ...",
+        hint: "Use a cláusula DELETE com um WHERE e um OR."
+    },
+    {
+        title: "NÍVEL 49: Queda da Defesa",
+        story: "Os logs nos entregaram. Destrua a tabela de logs da rede.",
+        schema: "Tabela: omnisec_logs",
+        question: "Qual comando estrutural destrói completamente a tabela 'omnisec_logs'?",
+        type: "query", answer: "drop table omnisec_logs",
+        placeholder: "DROP ...",
+        hint: "Apagar tabela definitivamente: DROP TABLE nome."
+    },
+    {
+        title: "NÍVEL 50: GAME OVER [FINAL BOSS]",
+        story: "A IA ESTÁ PRESTES A EXECUTAR O FIREWALL E APAGAR NOSSOS PCS DA REDE MUNDIAL! DESTRUA O CORAÇÃO DO SISTEMA AGORA!",
+        schema: "Banco de Dados Central: omnisec_mainframe",
+        question: "Qual é o comando destrutivo final (DDL) para apagar e excluir completamente o banco de dados 'omnisec_mainframe' do mapa?",
+        type: "query", answer: "drop database omnisec_mainframe",
+        placeholder: "DROP DATABASE ...",
+        hint: "A arma nuclear do SQL: DROP DATABASE nome_do_banco.",
         isBoss: true
     }
 ];
