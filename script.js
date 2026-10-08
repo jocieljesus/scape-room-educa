@@ -494,15 +494,31 @@ const FORMSPREE_URL = "https://formspree.io/f/mkjgaeoz";
 function toggleBgm() {
     isBgmMuted = !isBgmMuted;
     const btn = document.getElementById('btn-bgm');
-    const bgm = document.getElementById('bgm');
-    
-    if (isBgmMuted) { 
+
+    if (isBgmMuted) {
         btn.innerText = "🔇 MÚSICA: DESLIGADA";
-        bgm.pause(); 
-    } else { 
+    } else {
         btn.innerText = "🎵 MÚSICA: LIGADA";
-        bgm.play().catch(e => console.log("Aguardando interação")); 
     }
+
+    updateBackgroundMusic();
+}
+
+function updateBackgroundMusic() {
+    const bgm = document.getElementById('bgm');
+    const finalBgm = document.getElementById('bgm-final');
+    const activeBgm = currentLevelIndex === levels.length - 1 ? finalBgm : bgm;
+
+    [bgm, finalBgm].forEach(sound => {
+        if (sound !== activeBgm) sound.pause();
+    });
+
+    if (isBgmMuted) {
+        activeBgm.pause();
+        return;
+    }
+
+    activeBgm.play().catch(e => console.log("Aguardando interação"));
 }
 
 function toggleSfx() {
@@ -537,8 +553,6 @@ function startGame() {
     startTime = new Date(); 
     penaltyTime = 0;
     
-    if(!isBgmMuted) document.getElementById('bgm').play(); // Inicia música
-    
     document.getElementById('login-screen').classList.remove('active');
     document.getElementById('game-screen').classList.add('active');
     loadLevel();
@@ -567,6 +581,7 @@ function typeWriter(text, elementId, speed) {
 
 function loadLevel() {
     const levelData = levels[currentLevelIndex];
+    updateBackgroundMusic();
     document.getElementById('error-msg').innerText = "";
     
     // Reseta Sistema de Dicas
