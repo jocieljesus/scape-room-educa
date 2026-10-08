@@ -700,7 +700,7 @@ function checkAnswer() {
         currentLevelIndex++;
         
         if (currentLevelIndex >= levels.length) { 
-            finalizarJogo(); 
+            mostrarTransicao(true); 
         } else { 
             mostrarTransicao(); 
         }
@@ -719,16 +719,27 @@ function checkAnswer() {
 }
 
 
-function mostrarTransicao() {
+function mostrarTransicao(isFinal = false) {
     document.body.classList.remove('boss-mode');
     document.getElementById('game-screen').classList.remove('active');
     document.getElementById('transition-screen').classList.add('active');
+
+    if (isFinal) {
+        const transitionScreen = document.getElementById('transition-screen');
+        transitionScreen.querySelector('h2').innerText = '>_ FIREWALL DESATIVADO';
+        transitionScreen.querySelectorAll('.story')[0].innerText = 'Comando aceito.';
+        transitionScreen.querySelectorAll('.story')[1].innerText = 'Consolidando resultados...';
+    }
     
     setTimeout(() => {
         document.getElementById('transition-screen').classList.remove('active');
-        document.getElementById('game-screen').classList.add('active');
-        loadLevel();
-    }, 2500);
+        if (isFinal) {
+            finalizarJogo();
+        } else {
+            document.getElementById('game-screen').classList.add('active');
+            loadLevel();
+        }
+    }, isFinal ? 5000 : 2500);
 }
 
 function finalizarJogo() {
