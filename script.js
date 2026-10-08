@@ -47,7 +47,8 @@ const levels = [
         question: "Analisando as colunas acima, qual é o nome exato da coluna que é a Chave Primária (PK)?",
         type: "output", answer: "id_reg",
         placeholder: "Digite o nome da coluna",
-        hint: "Digite apenas o nome da coluna que tem a marcação (PK)."
+        hint: "Digite apenas o nome da coluna que tem a marcação (PK).",
+        isBoss: true
     },
     {
         title: "NÍVEL 6: O Primeiro Filtro (SELECT)",
@@ -83,7 +84,8 @@ const levels = [
         question: "Delete (DELETE FROM) da tabela 'logs_entrada' ONDE o 'ip' seja igual a '1.1.1.1'.",
         type: "query", answer: "delete from logs_entrada where ip = '1.1.1.1'",
         placeholder: "DELETE FROM ...",
-        hint: "DELETE FROM tabela WHERE coluna = 'valor'."
+        hint: "DELETE FROM tabela WHERE coluna = 'valor'.",
+        isBoss: true
     },
     {
         title: "NÍVEL 10: Apagão de Dados [BOSS BATTLE]",
@@ -92,8 +94,7 @@ const levels = [
         question: "Escreva a query para DELETAR todos os registros da tabela 'logs_temp' em um único golpe (sem WHERE).",
         type: "query", answer: "delete from logs_temp",
         placeholder: "DELETE FROM ...",
-        hint: "O comando DELETE sem o WHERE apaga todas as linhas de uma vez.",
-        isBoss: true
+        hint: "O comando DELETE sem o WHERE apaga todas as linhas de uma vez."
     },
 
     // --- FASE 2: MANIPULAÇÃO AVANÇADA E DML (11 a 20) ---
@@ -113,7 +114,8 @@ const levels = [
         question: "Atualize a tabela 'carteira' definindo 'moedas' = 9999 ONDE o 'id_player' for 1.",
         type: "query", answer: "update carteira set moedas = 9999 where id_player = 1",
         placeholder: "UPDATE ...",
-        hint: "UPDATE tabela SET coluna = valor WHERE condicao."
+        hint: "UPDATE tabela SET coluna = valor WHERE condicao.",
+        isBoss: true
     },
     {
         title: "NÍVEL 13: Upgrades Simultâneos (UPDATE)",
@@ -140,7 +142,8 @@ const levels = [
         question: "Delete TODOS os registros da tabela 'banimentos' (sem usar WHERE).",
         type: "query", answer: "delete from banimentos",
         placeholder: "DELETE FROM ...",
-        hint: "DELETE FROM tabela."
+        hint: "DELETE FROM tabela.",
+        isBoss: true
     },
     {
         title: "NÍVEL 16: Limpando o Lixo (DELETE)",
@@ -234,6 +237,7 @@ const levels = [
         type: "query", answer: "select email from contatos where email like '%@admin.com'",
         placeholder: "SELECT ...",
         hint: "No LIKE, coloque o % antes do texto."
+   
     },
     {
         title: "NÍVEL 26: Lacunas no Sistema (SELECT com Nulos)",
@@ -242,7 +246,8 @@ const levels = [
         question: "Selecione o 'id' da tabela 'bots' onde o 'num_serie' seja nulo.",
         type: "query", answer: "select id from bots where num_serie is null",
         placeholder: "SELECT ...",
-        hint: "Use IS NULL no WHERE."
+        hint: "Use IS NULL no WHERE.",
+        isBoss: true
     },
     {
         title: "NÍVEL 27: Acesso Negado (DELETE com LIKE)",
@@ -335,7 +340,8 @@ const levels = [
         question: "Traga a contagem total (COUNT(*)) da tabela 'falhas' onde a 'severidade' for 'alta'.",
         type: "query", answer: "select count(*) from falhas where severidade = 'alta'",
         placeholder: "SELECT ...",
-        hint: "Você pode filtrar funções matemáticas usando o WHERE."
+        hint: "Você pode filtrar funções matemáticas usando o WHERE.",
+        isBoss: true
     },
     {
         title: "NÍVEL 37: Fragmentação de Tropas (SELECT com GROUP BY)",
@@ -401,7 +407,8 @@ const levels = [
         question: "Traga tudo (*) de 'herois' fazendo um LEFT JOIN com 'guildas' (ON herois.id_guilda = guildas.id).",
         type: "query", answer: "select * from herois left join guildas on herois.id_guilda = guildas.id",
         placeholder: "SELECT ... LEFT JOIN ...",
-        hint: "O LEFT JOIN garante que a primeira tabela não perca linhas se a ligação não existir."
+        hint: "O LEFT JOIN garante que a primeira tabela não perca linhas se a ligação não existir.",
+        isBoss: true
     },
     {
         title: "NÍVEL 44: A Visão Oposta (RIGHT JOIN)",
@@ -437,7 +444,8 @@ const levels = [
         question: "Traga tudo (*) com INNER JOIN de log_a com log_b (ON log_a.ip = log_b.ip) e outro INNER JOIN de log_b com log_c (ON log_b.ip = log_c.ip).",
         type: "query", answer: "select * from log_a inner join log_b on log_a.ip = log_b.ip inner join log_c on log_b.ip = log_c.ip",
         placeholder: "SELECT ... INNER JOIN ... INNER JOIN ...",
-        hint: "Basta encadear os JOINs um após o outro na mesma linha."
+        hint: "Basta encadear os JOINs um após o outro na mesma linha.",
+        isBoss: true
     },
     {
         title: "NÍVEL 48: Limpeza Lógica (DELETE com OR)",
@@ -592,7 +600,7 @@ function loadLevel() {
     if (levelData.isBoss) {
         document.body.classList.add('boss-mode');
         document.getElementById('boss-timer-container').style.display = 'block';
-        startBossTimer(180); // 3 minutos
+        startBossTimer(100); // 100s
     } else {
         document.body.classList.remove('boss-mode');
         document.getElementById('boss-timer-container').style.display = 'none';
@@ -722,7 +730,8 @@ function finalizarJogo() {
     sendEmailReport(team, timeString);
 
     document.getElementById('progress-fill').style.width = `100%`;
-    document.getElementById('display-team-name').innerText = `${team} (Tempo Final: ${timeString})`;
+    document.getElementById('display-team-name').innerText = `${team}`;
+    document.getElementById('display-time').innerText = `Parabéns, seu tempo final foi enviado para o professor Jociel`;
     
     if (penaltyTime > 0) {
         document.getElementById('display-penalty').innerText = `*Inclui ${Math.floor(penaltyTime/60)} minutos de penalidade por uso de exploits (dicas).`;
