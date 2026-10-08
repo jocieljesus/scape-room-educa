@@ -46,7 +46,8 @@ const levels = [
         question: "Atualize (UPDATE) a tabela 'alarmes' definindo 'status' = 'off' (sem usar WHERE, altere todos).",
         type: "query", answer: "update alarmes set status = 'off'",
         placeholder: "UPDATE ...",
-        hint: "Sintaxe curta: UPDATE tabela SET coluna = 'valor'."
+        hint: "Sintaxe curta: UPDATE tabela SET coluna = 'valor'.",
+        isBoss: true
     },
     {
         title: "NÍVEL 6: Queima de Arquivo Específico (DELETE)",
@@ -139,7 +140,8 @@ const levels = [
         question: "Delete os registros da tabela 'banimentos' onde o 'nick' seja igual a 'ghost'.",
         type: "query", answer: "delete from banimentos where nick = 'ghost'",
         placeholder: "DELETE FROM ...",
-        hint: "Comando DELETE FROM tabela WHERE condicao."
+        hint: "Comando DELETE FROM tabela WHERE condicao.",
+        isBoss: true
     },
     {
         title: "NÍVEL 16: Limpando Inventário",
@@ -232,7 +234,8 @@ const levels = [
         question: "Selecione o 'email' da tabela 'contatos' onde o email termine com '@admin.com'.",
         type: "query", answer: "select email from contatos where email like '%@admin.com'",
         placeholder: "SELECT ...",
-        hint: "No LIKE, coloque o % antes da palavra."
+        hint: "No LIKE, coloque o % antes da palavra.",
+        isBoss: true
     },
     {
         title: "NÍVEL 26: Lacunas no Sistema",
@@ -325,7 +328,8 @@ const levels = [
         question: "Use a função agregadora para calcular a MÉDIA da coluna 'dano' da tabela 'armas'.",
         type: "query", answer: "select avg(dano) from armas",
         placeholder: "SELECT ...",
-        hint: "A função é AVG(coluna)."
+        hint: "A função é AVG(coluna).",
+        isBoss: true
     },
     {
         title: "NÍVEL 36: Contagem de Falhas",
@@ -418,7 +422,8 @@ const levels = [
         question: "INNER JOIN (ON players.id_guilda = guildas.id) selecionando players.nome e guildas.nome. Finalize com ORDER BY players.nome ASC.",
         type: "query", answer: "select players.nome, guildas.nome from players inner join guildas on players.id_guilda = guildas.id order by players.nome asc",
         placeholder: "SELECT ...",
-        hint: "Use o padrão tabela.coluna no SELECT para não gerar erro de ambiguidade."
+        hint: "Use o padrão tabela.coluna no SELECT para não gerar erro de ambiguidade.",
+        isBoss: true
     },
     {
         title: "NÍVEL 46: Cruzamento Analítico",
@@ -590,7 +595,7 @@ function loadLevel() {
     if (levelData.isBoss) {
         document.body.classList.add('boss-mode');
         document.getElementById('boss-timer-container').style.display = 'block';
-        startBossTimer(180); // 3 minutos
+        startBossTimer(100); // 100 segundos
     } else {
         document.body.classList.remove('boss-mode');
         document.getElementById('boss-timer-container').style.display = 'none';
